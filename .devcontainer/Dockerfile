@@ -1,3 +1,8 @@
+FROM node:20-bookworm
+
+RUN npm i -g wrangler@3.1.1
+RUN apt update -y && apt install -y libc++-dev libc++abi-dev
+
 FROM rust:1.73-bullseye
 
 # install cargo binstall to reduce image size
