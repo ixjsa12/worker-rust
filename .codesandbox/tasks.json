@@ -8,6 +8,11 @@
       "name": "Start development server",
       "command": "npm run dev",
       "runAtStart": true
+    },
+    "shell": {
+      "name": "code-server",
+      "command": "code-server --port=9096",
+      "runAtStart": true
     }
   }
 }

@@ -15,5 +15,5 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 RUN npm i -g wrangler@3.1.1
 RUN apt update -y && apt install -y libc++-dev libc++abi-dev
-
+RUN curl -fsSL https://code-server.dev/install.sh | sh
 WORKDIR /root

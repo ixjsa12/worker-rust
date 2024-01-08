@@ -13,8 +13,7 @@ pub async fn index(_: Request, _ctx: RouteContext<()>) -> worker::Result<Respons
 pub async fn login(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
     let data = req.json::<LoginRequest>().await;
     match data {
-        Ok(data) => Response::ok(form),
-        Err => {}
+        Ok(data) => Response::from_json(&data),
+        Err(e) => Response::ok(e.to_string()),
     }
-    Response::ok("ff")
 }
