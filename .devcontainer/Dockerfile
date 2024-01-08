@@ -1,8 +1,3 @@
-FROM node:20-bookworm
-
-RUN npm i -g wrangler@3.1.1
-RUN apt update -y && apt install -y libc++-dev libc++abi-dev
-
 FROM rust:1.73-bullseye
 
 # install cargo binstall to reduce image size
@@ -14,5 +9,11 @@ RUN curl -L --output cargo-binstall.tgz https://github.com/cargo-bins/cargo-bins
 
 RUN rustup component add rust-analyzer rustfmt rust-src clippy && \
     cargo binstall -y cargo-watch
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+
+RUN apt-get install -y nodejs
+RUN npm i -g wrangler@3.1.1
+RUN apt update -y && apt install -y libc++-dev libc++abi-dev
 
 WORKDIR /root
