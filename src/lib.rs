@@ -13,9 +13,9 @@ struct GenericResponse {
 #[event(fetch)]
 async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
     let rsp = Router::new()
+        .get_async("/pdf", pdf::index)
         .get_async("/", home::index)
         .post_async("/", home::login)
-        .get_async("/pdf", pdf::gen_pdf)
         .run(req, env)
         .await;
 
@@ -33,7 +33,8 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
                     .set("Content-Type", format!("charset=utf-8").as_str());
             }
         } else {
-           let _= rsp.headers_mut()
+            let _ = rsp
+                .headers_mut()
                 .set("Content-Type", format!("charset=utf-8").as_str());
         }
         Ok(rsp)
