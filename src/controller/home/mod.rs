@@ -1,3 +1,4 @@
+use crate::controller::utils;
 use serde::{Deserialize, Serialize};
 use worker::*;
 const HTML_CONTENT: &str = include_str!("./index.html");
@@ -14,12 +15,28 @@ pub async fn login(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<R
     let data = req.json::<LoginRequest>().await;
     match data {
         Ok(data) => {
-            // let d1: Result<d1::D1Database> = _ctx.env.d1("DB");
-            // if let Ok(orm :D1Database) = d1 {
-            //     d1.
-            // }
-            Response::ok("ok")
+            let db = _ctx.d1("DB");
+            match db {
+                Ok(db) => Response::ok("db 连接成公"),
+                Err(_) => Response::from_json(&utils::Response::<i32> {
+                    status: 500,
+                    message: String::from("db error"),
+                    data: None,
+                }),
+            }
         }
         Err(_) => Response::ok("err"),
+    }
+}
+
+pub async fn testdb(req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
+    let db = _ctx.d1("DB");
+    match db {
+        Ok(_db) => Response::ok("db 连接成公"),
+        Err(_) => Response::from_json(&utils::Response::<i32> {
+            status: 500,
+            message: String::from("db error"),
+            data: None,
+        }),
     }
 }

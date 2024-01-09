@@ -16,6 +16,7 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
         .get_async("/pdf", pdf::index)
         .get_async("/", home::index)
         .post_async("/", home::login)
+        .get_async("/test", home::testdb)
         .run(req, env)
         .await;
 
