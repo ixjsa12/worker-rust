@@ -2,7 +2,9 @@
 use serde::{Deserialize, Serialize};
 use worker::*;
 mod controller;
+mod model;
 use controller::home;
+use controller::install;
 use controller::pdf;
 #[derive(Debug, Deserialize, Serialize)]
 struct GenericResponse {
@@ -17,6 +19,7 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
         .get_async("/", home::index)
         .post_async("/", home::login)
         .get_async("/test", home::testdb)
+        .get_async("/install", install::install)
         .run(req, env)
         .await;
 
