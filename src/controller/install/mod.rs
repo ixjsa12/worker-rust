@@ -11,9 +11,15 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
             //     if item.len() == 0 {
             //         continue;
             //     }
-            console_debug!("{}", format!("输出:  {};", INSTALL_SQL.replace("\r\n", " ").replace(";", "\n")));
+            console_debug!(
+                "{}",
+                format!(
+                    "输出:  {};",
+                    INSTALL_SQL.replace("\r\n", " ").replace(";", "\n")
+                )
+            );
             let rs = db
-                .exec(format!("{};", INSTALL_SQL.replace("\r\n", " ").replace(";", "\n")).as_str())
+                .exec(INSTALL_SQL.replace("\r\n", " ").replace(";", "\n").as_str())
                 .await;
             match rs {
                 Ok(_) => {
