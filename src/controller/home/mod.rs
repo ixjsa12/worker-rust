@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use crate::controller::utils;
 use crate::model;
 use md5;

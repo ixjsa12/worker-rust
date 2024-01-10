@@ -18,6 +18,7 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
                     INSTALL_SQL.replace("\r\n", " ").replace(";", "\n")
                 )
             );
+            console_debug!("数据库对象 {}", db);
             let rs = db
                 .exec(INSTALL_SQL.replace("\r\n", " ").replace(";", "\n").as_str())
                 .await;
@@ -30,6 +31,7 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
                     })
                 }
                 Err(e) => {
+                    console_debug!("错误信息  {:?}", e);
                     // let _ = db.exec("ROLLBACK;");
                     return Response::from_json(&utils::Response::<i32> {
                         status: 500,
