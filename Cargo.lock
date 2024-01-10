@@ -1330,6 +1330,7 @@ dependencies = [
  "pdf",
  "rhai",
  "serde",
+ "serde_json",
  "uuid",
  "worker",
 ]
