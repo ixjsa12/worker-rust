@@ -788,6 +788,7 @@ var D1_IMPORTS = ["__D1_BETA__DB"];
 // ../../usr/lib/node_modules/wrangler/templates/middleware/middleware-d1-beta.ts
 var D1Database = class {
   constructor(binding) {
+    console.log(binding);
     this.binding = binding;
   }
   prepare(query) {
