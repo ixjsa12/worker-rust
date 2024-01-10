@@ -19,7 +19,9 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
         .get_async("/pdf", pdf::index)
         .get_async("/", home::index)
         .post_async("/", home::login)
-        .post_async("/test", rhai::test)
+        .post_async("/rhai/test", rhai::test)
+        .post_async("/rhai/save", rhai::save)
+        .get_async("/rhai/run/:id", rhai::run)
         .get_async("/install", install::install)
         .run(req, env)
         .await;

@@ -18,7 +18,7 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
                     INSTALL_SQL.replace("\r\n", " ").replace(";", "\n")
                 )
             );
-            console_debug!("数据库对象 {}", db);
+
             let rs = db
                 .exec(INSTALL_SQL.replace("\r\n", " ").replace(";", "\n").as_str())
                 .await;
