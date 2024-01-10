@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 use crate::controller::utils;
 use crate::model;
 use md5;
@@ -77,9 +79,12 @@ pub async fn login(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<R
                                         data: None,
                                     })
                                 }
-                                Err(_) => Response::from_json(&utils::Response::<i32> {
+                                Err(e) => Response::from_json(&utils::Response::<i32> {
                                     status: 500,
-                                    message: String::from("数据库查询失败！"),
+                                    message: String::from(format!(
+                                        "数据库查询失败！:{}",
+                                        e.to_string()
+                                    )),
                                     data: None,
                                 }),
                             }
