@@ -1,5 +1,5 @@
 name = "worker-rust"
-main = "build/worker/_worker.js"
+main = "build/worker/shim.mjs"
 compatibility_date = "2023-06-28"
 
 [build]
