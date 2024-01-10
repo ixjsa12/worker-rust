@@ -5,20 +5,20 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
     let db = _ctx.d1("DB");
     match db {
         Ok(db) => {
-            let _ = db.exec("BEGIN TRANSACTION;");
+            // let _ = db.exec("BEGIN TRANSACTION;");
             let sqls: Vec<String> = INSTALL_SQL.split(';').map(|s| s.to_string()).collect();
             for item in sqls {
                 if item.len() == 0 {
                     continue;
                 }
-                console_debug!("{}",format!("输出:  {};", item.replace("\r\n", " ")));
+                console_debug!("{}", format!("输出:  {};", item.replace("\r\n", " ")));
                 let rs = db
                     .exec(format!("{};", item.replace("\r\n", " ")).as_str())
                     .await;
                 match rs {
                     Ok(_) => continue,
                     Err(e) => {
-                        let _ = db.exec("ROLLBACK;");
+                        // let _ = db.exec("ROLLBACK;");
                         return Response::from_json(&utils::Response::<i32> {
                             status: 500,
                             message: String::from(e.to_string()),
@@ -27,7 +27,7 @@ pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
                     }
                 }
             }
-            let _ = db.exec("COMMIT;");
+            // let _ = db.exec("COMMIT;");
             Response::from_json(&utils::Response::<i32> {
                 status: 200,
                 message: String::from("初始化成功!"),
