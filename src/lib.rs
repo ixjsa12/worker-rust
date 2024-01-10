@@ -6,6 +6,7 @@ mod model;
 use controller::home;
 use controller::install;
 use controller::pdf;
+use controller::rhai;
 #[derive(Debug, Deserialize, Serialize)]
 struct GenericResponse {
     status: u16,
@@ -18,7 +19,7 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
         .get_async("/pdf", pdf::index)
         .get_async("/", home::index)
         .post_async("/", home::login)
-        .get_async("/test", home::testdb)
+        .post_async("/test", rhai::test)
         .get_async("/install", install::install)
         .run(req, env)
         .await;

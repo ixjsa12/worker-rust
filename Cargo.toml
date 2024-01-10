@@ -9,7 +9,7 @@ wasm-opt = false
 
 [lib]
 crate-type = ["cdylib"]
-#rhai = { version = "1.12.0", features = ["wasm-bindgen"] }
+
 
 [dependencies]
 worker = { version = "0.0.18", features = ["d1"] }
@@ -17,6 +17,7 @@ serde = "1.0.188"
 uuid = { version = "1.6.1", features = ["v4","js"] }
 pdf = "0.9.0"
 md5 = "0.7.0"
+rhai = { version = "1.12.0", features = ["wasm-bindgen","sync"] }
 [profile.release]
 lto = true
 strip = true
