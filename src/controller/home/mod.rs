@@ -12,10 +12,20 @@ pub struct LoginRequest {
     pub password: String,
 }
 pub async fn index(_: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
-    let data = md5::compute(b"xhuan123.");
-    let data = format!("{:x}", data);
-    Response::ok(data)
-    // Response::from_html(HTML_CONTENT)
+    // let data = md5::compute(b"xhuan123.");
+    // let data = format!("{:x}", data);
+    // Response::ok(data)
+    let req = Request::new("https://example.com", Method::Post);
+    match req {
+        Ok(req) => {
+            let resp = Fetch::Request(req).send().await;
+            match resp {
+                Ok(mut resp) => resp.cloned(),
+                Err(_e) => Response::from_html(HTML_CONTENT),
+            }
+        }
+        Err(_x) => Response::from_html(HTML_CONTENT),
+    }
 }
 
 pub async fn login(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
