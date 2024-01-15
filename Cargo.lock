@@ -1332,12 +1332,13 @@ dependencies = [
 name = "worker-rust"
 version = "0.1.0"
 dependencies = [
+ "futures-channel",
+ "futures-util",
  "md5",
  "pdf",
  "rhai",
  "serde",
  "serde_json",
- "tokio",
  "uuid",
  "worker",
 ]

@@ -4,8 +4,6 @@ use rhai::{Dynamic, Engine, EvalAltResult, Map};
 use std::result::Result as StdResult;
 use uuid::Uuid;
 use worker::*;
-
-use tokio::run;
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct Test {
     pub name: String,
@@ -21,8 +19,9 @@ fn safe_divide(x: i64, y: i64) -> StdResult<i64, Box<EvalAltResult>> {
     }
 }
 
-fn request(url: &str, option: Map) -> StdResult<String, Box<EvalAltResult>> {
+async fn request(url: &str, option: Map) -> StdResult<String, Box<EvalAltResult>> {
     let method = Method::Get;
+
     let method_str = option.get("method");
     let req = Request::new(url, method);
     match req {
@@ -42,17 +41,24 @@ fn request(url: &str, option: Map) -> StdResult<String, Box<EvalAltResult>> {
         Err(_f) => Err("请求构建错误！".into()),
     }
 }
-fn blockReq(url: &str, option: Map) -> StdResult<String, Box<EvalAltResult>> {
-    // 创建同步运行时
-    let mut runtime = Runtime::new().unwrap();
-    // 在同步上下文中调用异步函数并等待其完成
-    runtime.block_on(request(url, option))
+
+fn blockReq(url: &str, option: Map) {
+    let (tx, rx) = futures_channel::oneshot::channel();
+    // Spawns a future that'll make our fetch request and not block this function.
+    wasm_bindgen_futures::spawn_local({
+        async move {
+            let fetch = Fetch::Url("https://cloudflare.com".parse().unwrap());
+            let res = fetch.send_with_signal(&signal).await;
+            tx.send(res).unwrap();
+        }
+    });
 }
 // expand_enum! { http_method_enum:  worker::Method=>Head,Get,Post,Put,Patch,Delete,Options,Connect,Trace}
 
 pub async fn test(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
     let data = req.json::<model::RhaiData>().await;
-    let _ = safe_divide(1, 2);
+    console_debug!("脚本测试哦");
+
     match data {
         Ok(data) => {
             let mut engine = Engine::new();
@@ -146,7 +152,7 @@ pub async fn save(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Re
     }
 }
 
-pub async fn run(mut req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
+pub async fn run(req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
     let id = ctx.param("id");
     match id {
         Some(id) => {
