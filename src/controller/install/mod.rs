@@ -1,12 +1,12 @@
 use crate::controller::utils;
 use worker::*;
 const INSTALL_SQL: &str = include_str!("./install.sql");
-pub async fn install(req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
+pub async fn install(_req: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
     let db = _ctx.d1("DB");
     match db {
         Ok(db) => {
             // let _ = db.exec("BEGIN TRANSACTION;");
-            let sqls: Vec<String> = INSTALL_SQL.split(';').map(|s| s.to_string()).collect();
+            // let sqls: Vec<String> = INSTALL_SQL.split(';').map(|s| s.to_string()).collect();
             // for item in sqls {
             //     if item.len() == 0 {
             //         continue;

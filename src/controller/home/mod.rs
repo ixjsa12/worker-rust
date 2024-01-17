@@ -12,9 +12,6 @@ pub struct LoginRequest {
     pub password: String,
 }
 pub async fn index(_: Request, _ctx: RouteContext<()>) -> worker::Result<Response> {
-    // let data = md5::compute(b"xhuan123.");
-    // let data = format!("{:x}", data);
-    // Response::ok(data)
     let req = Request::new("https://example.com", Method::Post);
     match req {
         Ok(req) => {

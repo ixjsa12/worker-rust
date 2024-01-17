@@ -1,12 +1,11 @@
 // use rhai::Engine;
+use crate::controller::dav;
+use crate::controller::home;
+use crate::controller::install;
 use serde::{Deserialize, Serialize};
 use worker::*;
 mod controller;
 mod model;
-use controller::home;
-use controller::install;
-use controller::pdf;
-use controller::rhai;
 #[derive(Debug, Deserialize, Serialize)]
 struct GenericResponse {
     status: u16,
@@ -16,13 +15,11 @@ struct GenericResponse {
 #[event(fetch)]
 async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
     let rsp = Router::new()
-        .get_async("/pdf", pdf::index)
         .get_async("/", home::index)
         .post_async("/", home::login)
-        .post_async("/rhai/test", rhai::test)
-        .post_async("/rhai/save", rhai::save)
-        .get_async("/rhai/run/:id", rhai::run)
         .get_async("/install", install::install)
+        .post_async("/dav/create", dav::add)
+        .get_async("/derive/:path", dav::webdav)
         .run(req, env)
         .await;
 

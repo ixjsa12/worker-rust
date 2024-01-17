@@ -11,10 +11,10 @@ pub struct UseModel {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct RhaiData {
-    pub rhai_id: Option<u32>,
-    pub user_id: Option<u32>,
-    pub method: Option<String>,
-    pub script: Option<String>,
-    pub uuid: Option<String>,
+pub struct DavModel {
+    pub dav_id: u32,
+    pub server: String,
+    pub username: String,
+    pub password: String,
+    pub path: String,
 }
