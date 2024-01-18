@@ -19,7 +19,7 @@ async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
         .post_async("/", home::login)
         .get_async("/install", install::install)
         .post_async("/dav/create", dav::add)
-        .get_async("/derive/:path", dav::webdav)
+        .get_async("/derive/*path", dav::webdav)
         .run(req, env)
         .await;
 

@@ -71,6 +71,7 @@ pub async fn webdav(mut req: Request, ctx: RouteContext<()>) -> worker::Result<R
     let path = ctx.param("path");
     match path {
         Some(path) => {
+            console_debug!("{:?}", path.split('/'));
             let db = ctx.d1("DB");
             match db {
                 Ok(db) => {
@@ -83,19 +84,43 @@ pub async fn webdav(mut req: Request, ctx: RouteContext<()>) -> worker::Result<R
                                 Ok(data) => match data {
                                     Some(data) => {
                                         let mut head = Headers::new();
-                                        let auth=encode();
-                                        head.append("Authorization", formate!("Basic "));
+                                        let auth = encode(
+                                            format!("{}:{}", data.username, data.password)
+                                                .as_bytes(),
+                                        );
+                                        head.append(
+                                            "Authorization",
+                                            format!("Basic {}", auth).as_str(),
+                                        );
+                                        head.append("Depth", "1");
+                                        head.append("Content-Type", "application/xml");
                                         let mut requestInit = RequestInit::new();
                                         requestInit.with_method(Method::Get);
                                         requestInit.with_headers(head);
                                         let request =
                                             Request::new_with_init(&data.server, &requestInit);
-
-                                        Response::from_json(&utils::Response::<model::DavModel> {
-                                            status: 200,
-                                            message: String::from("查询成功"),
-                                            data: Some(data),
-                                        })
+                                        match request {
+                                            Ok(request) => {
+                                                let data = Fetch::Request(request).send().await;
+                                                match data {
+                                                    Ok(data) => Ok(data),
+                                                    Err(_e) => Response::from_json(
+                                                        &utils::Response::<i32> {
+                                                            status: 500,
+                                                            message: String::from("请求构建失败@"),
+                                                            data: None,
+                                                        },
+                                                    ),
+                                                }
+                                            }
+                                            Err(_e) => {
+                                                Response::from_json(&utils::Response::<i32> {
+                                                    status: 500,
+                                                    message: String::from("请求构建失败@"),
+                                                    data: None,
+                                                })
+                                            }
+                                        }
                                     }
                                     None => Response::from_json(&utils::Response::<i32> {
                                         status: 500,
