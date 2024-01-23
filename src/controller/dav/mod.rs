@@ -1,8 +1,7 @@
 use crate::controller::utils;
 use crate::model;
-use base64::{decode, encode};
+use base64::encode;
 use serde::{Deserialize, Serialize};
-use std::fmt::format;
 use worker::*;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct AddWebDavRequest {
@@ -30,7 +29,7 @@ pub async fn add(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
                         Ok(query) => {
                             let result = query.run().await;
                             match result {
-                                Ok(result) => Response::from_json(&utils::Response::<i32> {
+                                Ok(_result) => Response::from_json(&utils::Response::<i32> {
                                     status: 500,
                                     message: String::from("保存成功"),
                                     data: None,
@@ -67,7 +66,7 @@ pub async fn add(mut req: Request, _ctx: RouteContext<()>) -> worker::Result<Res
     }
 }
 
-pub async fn webdav(mut req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
+pub async fn webdav(_req: Request, ctx: RouteContext<()>) -> worker::Result<Response> {
     let path = ctx.param("path");
     match path {
         Some(path) => {

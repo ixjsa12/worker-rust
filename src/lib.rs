@@ -1,5 +1,6 @@
 // use rhai::Engine;
 use crate::controller::dav;
+use crate::controller::discord;
 use crate::controller::home;
 use crate::controller::install;
 use serde::{Deserialize, Serialize};
@@ -16,6 +17,7 @@ struct GenericResponse {
 async fn main(req: Request, env: Env, _ctx: Context) -> Result<Response> {
     let rsp = Router::new()
         .get_async("/", home::index)
+        .post_async("/discord/interaction", discord::interaction_api)
         .post_async("/", home::login)
         .get_async("/install", install::install)
         .post_async("/dav/create", dav::add)
